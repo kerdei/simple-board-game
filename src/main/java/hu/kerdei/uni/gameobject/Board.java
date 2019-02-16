@@ -69,7 +69,7 @@ public class Board {
         Main.LOG.debug(boardFields.get(toPos.row).get(toPos.column).toString());
 
         Main.LOG.debug(boardFields.get(fromPos.row).get(fromPos.column).toString());
-        boardFields.get(fromPos.row).set(fromPos.column,field2);
+        boardFields.get(fromPos.row).set(fromPos.column, field2);
         Main.LOG.debug(boardFields.get(fromPos.row).get(fromPos.column).toString());
 
     }
@@ -131,5 +131,105 @@ public class Board {
             }
         }
         return stringBuilder.toString();
+    }
+
+    /*
+    Final conditions are the followings:
+        #1 There is horizontally 3 fields adjacently with the same color
+        #2 There is vertically  3 fields adjacently with the same color
+        #3 There is 3 fields diagonally with the same color.
+     */
+    public boolean isFinalState() {
+        //@formatter:off
+        // #1
+        Main.LOG.debug("isFinalState start");
+        Main.LOG.debug("Horizontal check");
+        for (int i = 0; i < boardFields.size(); i++) {
+            for (int j = 1; j < boardFields.get(i).size() - 1; j++) {
+                if (
+                        !boardFields.get(i).get(j -1).isEmpty() &&
+                        !boardFields.get(i).get(j).isEmpty() &&
+                        !boardFields.get(i).get(j + 1).isEmpty()
+                        &&
+
+                        boardFields.get(i).get(j - 1).getColor().getValue() ==
+                        boardFields.get(i).get(j).getColor().getValue() &&
+
+                        boardFields.get(i).get(j + 1).getColor().getValue() ==
+                        boardFields.get(i).get(j).getColor().getValue() &&
+
+                        boardFields.get(i).get(j + 1).getColor().getValue() ==
+                        boardFields.get(i).get(j - 1).getColor().getValue())
+                {
+                    Main.LOG.debug("Horizontal check true at ", boardFields.get(i).get(j));
+                    return true;
+                }
+            }
+        }
+
+        // #2
+        Main.LOG.debug("Vertical check");
+        for (int i = 1; i < boardFields.size() - 1; i++) {
+            for (int j = 0; j < boardFields.get(i).size(); j++) {
+
+                if(
+                    !boardFields.get(i-1).get(j).isEmpty() &&
+                    !boardFields.get(i).get(j).isEmpty() &&
+                    !boardFields.get(i+1).get(j).isEmpty() &&
+
+                    boardFields.get(i-1).get(j).getColor() ==
+                    boardFields.get(i).get(j).getColor() &&
+
+                    boardFields.get(i+1).get(j).getColor() ==
+                    boardFields.get(i).get(j).getColor() &&
+
+                    boardFields.get(i+1).get(j).getColor() ==
+                    boardFields.get(i-1).get(j).getColor()
+                ){
+                    Main.LOG.debug("Vertical check true at ", boardFields.get(i).get(j));
+                    return  true;
+                }
+
+            }
+        }
+
+
+
+        /*
+        /#Crosschecks
+         */
+        Main.LOG.debug("Cross check");
+        for (int i = 1 ; i < boardFields.size()-1 ; i++){
+            for (int j = 1 ; j < boardFields.get(i).size()-1; j++){
+                if (
+                   (!boardFields.get(i-1).get(j-1).isEmpty() &&
+                    !boardFields.get(i).get(j).isEmpty() &&
+                    !boardFields.get(i-1).get(j-1).isEmpty() &&
+
+                    boardFields.get(i-1).get(j-1).getColor() ==
+                    boardFields.get(i).get(j).getColor() &&
+                    boardFields.get(i+1).get(j+1).getColor() ==
+                    boardFields.get(i).get(j).getColor() &&
+                    boardFields.get(i+1).get(j+1).getColor() ==
+                    boardFields.get(i-1).get(j-1).getColor())
+                    ||
+                   (!boardFields.get(i-1).get(j+1).isEmpty()&&
+                    !boardFields.get(i).get(j).isEmpty() &&
+                    !boardFields.get(i+1).get(j-1).isEmpty()&&
+                    boardFields.get(i-1).get(j+1).getColor() ==
+                    boardFields.get(i).get(j).getColor() &&
+                    boardFields.get(i+1).get(j-1).getColor() ==
+                    boardFields.get(i).get(j).getColor() &&
+                    boardFields.get(i-1).get(j+1).getColor() ==
+                    boardFields.get(i+1).get(j-1).getColor())){
+                     Main.LOG.debug("Cross check true at ", boardFields.get(i).get(j));
+
+                    return true;
+                }
+
+            }
+        }
+        //@formatter:on
+        return false;
     }
 }
