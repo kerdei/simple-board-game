@@ -1,15 +1,20 @@
 package hu.kerdei.uni.gameplay;
 
+import java.math.*;
+
+import hu.kerdei.uni.Main;
 import hu.kerdei.uni.gameobject.*;
+
+import static java.lang.Math.abs;
 
 public class Gameplay {
 
-    private Board board;
+    public static Board board;
     private Player player1;
     private Player player2;
 
     public Gameplay(String player1Name, String player2Name, Board board) {
-        this.board = board;
+        Gameplay.board = board;
         player1 = new Player(player1Name, Color.BLUE, true);
 
         player2 = new Player(player2Name, Color.RED, false);
@@ -26,9 +31,6 @@ public class Gameplay {
     public void makeMove(Player player, Pos fromPos, Pos toPos) {
         switchNextPlayer(player);
         board.switchFields(fromPos, toPos);
-        if (board.isFinalState()) {
-            endGame();
-        }
     }
 
     private void endGame() {
@@ -50,10 +52,15 @@ public class Gameplay {
         Field fromField = board.getBoardFields().get(fromPos.row).get(fromPos.column);
         Field toField = board.getBoardFields().get(toPos.row).get(toPos.column);
 
+        int rowAbs = abs(fromPos.row - toPos.row);
+        int columnAbs = abs(fromPos.column - toPos.column);
+
         return player.isNext() &&
                 !fromField.isEmpty() &&
                 fromField.getColor().getValue() == player.getColor().getValue() &&
-                toField.isEmpty();
+                toField.isEmpty()&&
+                rowAbs <= 1 &&
+                columnAbs <= 1;
     }
 
 
