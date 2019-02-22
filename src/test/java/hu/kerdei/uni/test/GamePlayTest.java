@@ -1,176 +1,146 @@
 package hu.kerdei.uni.test;
 
+import hu.kerdei.uni.gameobject.Board;
 import hu.kerdei.uni.gameobject.Color;
 import hu.kerdei.uni.gameobject.Field;
 import hu.kerdei.uni.gameobject.Pos;
 import hu.kerdei.uni.gameplay.Gameplay;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.*;
 
 public class GamePlayTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GamePlayTest.class);
-
-
-    public GamePlayTest() {
-        LOG.debug("GamePlayTest start");
-    }
-
     @Test
-    public void validMoveBlue() {
-        LOG.debug("validMoveBlue");
+    public void validMoveBlue(){
+
+        Board board = new Board();
 
         //Blue field
-        Pos fromPos = new Pos(0, 0);
+        Pos fromPos = new Pos(0,0);
         //Empty field
-        Pos toPos = new Pos(1, 0);
+        Pos toPos = new Pos(1,0);
 
-        Gameplay gameplay = Gameplay.getInstance();
-        gameplay.resetGameplay();
+        Gameplay gameplay = new Gameplay("Player1","Player2",board);
 
-        Field pastStateOfField = gameplay.getBoard().getBoardFields().get(fromPos.row).get(fromPos.column);
+        Field pastStateOfField = Gameplay.board.getBoardFields().get(fromPos.row).get(fromPos.column);
 
-        assertEquals(Color.BLUE.getValue(), pastStateOfField.getColor().getValue());
-        assertTrue(gameplay.canMakeMove(fromPos, toPos));
-        if (gameplay.canMakeMove(fromPos, toPos)) {
-            gameplay.makeMove(fromPos, toPos);
+        assertEquals(Color.BLUE.getValue(),pastStateOfField.getColor().getValue());
+        assertTrue(gameplay.canMakeMove(gameplay.getPlayer1(),fromPos,toPos));
+        if (gameplay.canMakeMove(gameplay.getPlayer1(),fromPos,toPos)) {
+            gameplay.makeMove(gameplay.getPlayer1(), fromPos, toPos);
         }
-        Field newStateOfField = gameplay.getBoard().getBoardFields().get(toPos.row).get(fromPos.column);
-        assertEquals(pastStateOfField, newStateOfField);
+        Field newStateOfField = Gameplay.board.getBoardFields().get(toPos.row).get(fromPos.column);
+        assertEquals(pastStateOfField,newStateOfField);
 
     }
 
     @Test
-    public void validMoveRed() {
-        LOG.debug("validMoveRed");
+    public void validMoveRed(){
 
-        Gameplay gameplay = Gameplay.getInstance();
-        gameplay.resetGameplay();
+        Board board = new Board();
 
         //Moving out the field from the start state
-        Pos beforeCheckPos = new Pos(0, 1);
+        Pos beforeCheckPos = new Pos(0,1);
 
-        Pos fromPos = new Pos(2, 3);
+        Pos fromPos = new Pos(2,3);
         Pos toPos = new Pos(3, 3);
 
         //Color.RED field
-        gameplay.getBoard().switchFields(beforeCheckPos,fromPos);
+        board.switchFields(beforeCheckPos, fromPos);
 
-        Field pastStateOfTheRedField = gameplay.getBoard().getBoardFields().get(fromPos.row).get(fromPos.column);
+        Gameplay gameplay = new Gameplay("Player1","Player2",board);
 
-        assertEquals(Color.RED.getValue(), pastStateOfTheRedField.getColor().getValue());
+        Field pastStateOfTheRedField = Gameplay.board.getBoardFields().get(fromPos.row).get(fromPos.column);
+
+        assertEquals(Color.RED.getValue(),pastStateOfTheRedField.getColor().getValue());
 
         //Make move with player1 first, after player2 can make a move
-        gameplay.makeMove(new Pos(0, 0), new Pos(1, 0));
-        assertTrue(gameplay.canMakeMove(fromPos, toPos));
+        gameplay.makeMove(gameplay.getPlayer1(),new Pos(0,0),new Pos(1,0));
 
-        if (gameplay.canMakeMove(fromPos, toPos)) {
-            gameplay.makeMove(fromPos, toPos);
+        assertTrue(gameplay.canMakeMove(gameplay.getPlayer2(),fromPos, toPos));
+
+        if ( gameplay.canMakeMove(gameplay.getPlayer2(),fromPos,toPos)){
+            gameplay.makeMove(gameplay.getPlayer2(),fromPos,toPos);
         }
-
-        Field newStateOfTheRedField = gameplay.getBoard().getBoardFields().get(toPos.row).get(fromPos.column);
-        assertEquals(pastStateOfTheRedField, newStateOfTheRedField);
+        
+        Field newStateOfTheRedField = Gameplay.board.getBoardFields().get(toPos.row).get(fromPos.column);
+        assertEquals(pastStateOfTheRedField,newStateOfTheRedField);
     }
 
     @Test
-    public void invalidMoveNotAdjacent() {
-        LOG.debug("invalidMoveNotAdjacent");
-
+    public void invalidMoveNotAdjacent(){
         //Blue field
-        Pos fromPos = new Pos(0, 0);
+        Pos fromPos = new Pos(0,0);
         //Empty field
-        Pos toPos = new Pos(2, 0);
+        Pos toPos = new Pos(2,0);
 
-        Gameplay gameplay = Gameplay.getInstance();
-        gameplay.resetGameplay();
+        Gameplay gameplay = new Gameplay("Player1","Player2",new Board());
 
-        Field pastStateOfField = gameplay.getBoard().getBoardFields().get(fromPos.row).get(fromPos.column);
+        Field pastStateOfField = Gameplay.board.getBoardFields().get(fromPos.row).get(fromPos.column);
 
-        assertEquals(Color.BLUE.getValue(), pastStateOfField.getColor().getValue());
-        assertFalse(gameplay.canMakeMove(fromPos, toPos));
+        assertEquals(Color.BLUE.getValue(),pastStateOfField.getColor().getValue());
+        assertFalse(gameplay.canMakeMove(gameplay.getPlayer1(),fromPos,toPos));
     }
 
     @Test
-    public void invalidMoveNotNextPlayer() {
-        LOG.debug("invalidMoveNotNextPlayer");
+    public void invalidMoveNotNextPlayer(){
 
         //Red field
-        Pos fromPos = new Pos(0, 1);
+        Pos fromPos = new Pos(0,1);
 
         //Empty field
-        Pos toPos = new Pos(1, 1);
+        Pos toPos = new Pos(1,1);
 
 
-        Gameplay gameplay = Gameplay.getInstance();
-        gameplay.resetGameplay();
+        Gameplay gameplay = new Gameplay("Player1","Player2",new Board());
 
         assertFalse(gameplay.getPlayer2().isNext());
-        assertFalse(gameplay.canMakeMove(fromPos, toPos));
+        assertFalse(gameplay.canMakeMove(gameplay.getPlayer2(),fromPos,toPos));
     }
 
     @Test
-    public void invalidMoveNotOwnColor() {
-        LOG.debug("invalidMoveNotOwnColor");
+    public void invalidMoveNotOwnColor(){
 
         //Red field
-        Pos fromPos = new Pos(0, 1);
+        Pos fromPos = new Pos(0,1);
 
         //Empty field
-        Pos toPos = new Pos(1, 1);
+        Pos toPos = new Pos(1,1);
 
 
-        Gameplay gameplay = Gameplay.getInstance();
-        gameplay.resetGameplay();
+        Gameplay gameplay = new Gameplay("Player1","Player2",new Board());
 
-        Field redField = gameplay.getBoard().getBoardFields().get(fromPos.row).get(fromPos.column);
-        assertNotEquals(gameplay.getPlayer1().getColor().getValue(), redField.getColor().getValue());
-        assertFalse(gameplay.canMakeMove(fromPos, toPos));
+        Field redField = Gameplay.board.getBoardFields().get(fromPos.row).get(fromPos.column);
+        assertNotEquals(gameplay.getPlayer1().getColor().getValue(),redField.getColor().getValue());
+        assertFalse(gameplay.canMakeMove(gameplay.getPlayer1(),fromPos,toPos));
     }
 
     @Test
-    public void invalidMoveOnOtherColoredField() {
-        LOG.debug("invalidMoveOnOtherColoredField");
+    public void invalidMoveOnOtherColoredField(){
         //Blue field
-        Pos fromPos = new Pos(0, 0);
+        Pos fromPos = new Pos(0,0);
 
         //Red Field
-        Pos toPos = new Pos(0, 1);
+        Pos toPos = new Pos(0,1);
 
 
-        Gameplay gameplay = Gameplay.getInstance();
-        gameplay.resetGameplay();
+        Gameplay gameplay = new Gameplay("Player1","Player2",new Board());
 
-        Field blueField = gameplay.getBoard().getBoardFields().get(fromPos.row).get(fromPos.column);
-        Field redField = gameplay.getBoard().getBoardFields().get(toPos.row).get(toPos.column);
+        Field blueField = Gameplay.board.getBoardFields().get(fromPos.row).get(fromPos.column);
+        Field redField= Gameplay.board.getBoardFields().get(toPos.row).get(toPos.column);
 
         assertTrue(!blueField.isEmpty());
         assertTrue(!redField.isEmpty());
 
-        assertFalse(gameplay.canMakeMove(fromPos, toPos));
+        assertFalse(gameplay.canMakeMove(gameplay.getPlayer1(),fromPos,toPos));
     }
 
     @Test
-    public void invalidCrossMove() {
-        LOG.debug("invalidCrossMove");
-        //Blue field
-        Pos fromPos = new Pos(0, 0);
+    public void endConditionShouldResultInGameOver(){
 
-        //Empty Field
-        Pos toPos = new Pos(1, 1);
-
-
-        Gameplay gameplay = Gameplay.getInstance();
-        gameplay.resetGameplay();
-
-        Field blueField = gameplay.getBoard().getBoardFields().get(fromPos.row).get(fromPos.column);
-        Field emptyField = gameplay.getBoard().getBoardFields().get(toPos.row).get(toPos.column);
-
-        assertTrue(!blueField.isEmpty());
-        assertTrue(emptyField.isEmpty());
-
-        assertFalse(gameplay.canMakeMove(fromPos, toPos));
     }
+
+
+
 }

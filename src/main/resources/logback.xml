@@ -7,10 +7,10 @@
     </layout>
   </appender>
   
-  <logger name="hu.kerdei.uni" level="ERROR"/>
+  <logger name="hu.kerdei.uni" level="TRACE"/>
   
 
-  <root level="error">
+  <root level="debug">
     <appender-ref ref="STDOUT" />
   </root>
 </configuration>

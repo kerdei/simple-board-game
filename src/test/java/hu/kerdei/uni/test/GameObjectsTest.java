@@ -14,11 +14,8 @@ import static org.junit.Assert.*;
 
 public class GameObjectsTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GameObjectsTest.class);
+    static final Logger LOG = LoggerFactory.getLogger(GameObjectsTest.class);
 
-    public GameObjectsTest(){
-        LOG.debug("GameObjectsTest start");
-    }
 
     @Test
     public void boardConstructorShouldGiveBackTheStartState() {
@@ -254,14 +251,12 @@ public class GameObjectsTest {
 
     @Test
     public void startStateIsNotAFinalStateTest() {
-        LOG.debug("startStateIsNotAFinalStateTest");
         Board board = new Board();
         assertFalse(board.isFinalState());
     }
 
     @Test
     public void notFinalState1Test1() {
-        LOG.debug("notFinalState1Test1");
         Board board = new Board();
         board.switchFields(new Pos(4, 0), new Pos(3, 0));
         board.switchFields(new Pos(4, 2), new Pos(2, 1));
@@ -271,7 +266,6 @@ public class GameObjectsTest {
 
     @Test
     public void notFinalState1Test2() {
-        LOG.debug("notFinalState1Test2");
         Board board = new Board();
         board.switchFields(new Pos(0, 0), new Pos(2, 1));
         board.switchFields(new Pos(0, 2), new Pos(2, 2));
@@ -281,7 +275,6 @@ public class GameObjectsTest {
 
     @Test
     public void notFinalState1Test3() {
-        LOG.debug("notFinalState1Test3");
         Board board = new Board();
         board.switchFields(new Pos(0, 1), new Pos(1, 1));
         board.switchFields(new Pos(1, 2), new Pos(2, 2));
