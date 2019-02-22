@@ -2,7 +2,6 @@ package hu.kerdei.uni.gameobject;
 
 public class Field {
 
-
     private Boolean isEmpty;
     private Color color;
 
@@ -20,16 +19,8 @@ public class Field {
         return isEmpty;
     }
 
-    public void setEmpty(Boolean empty) {
-        isEmpty = empty;
-    }
-
     public Color getColor() {
         return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 
     @Override
@@ -37,7 +28,7 @@ public class Field {
         return "Field{" +
                 "isEmpty=" + isEmpty +
                 ", color=" + color +
-                ", obj=" + super.toString()+
+                ", obj=" + super.toString() +
                 '}';
     }
 }

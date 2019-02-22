@@ -1,40 +1,42 @@
 package hu.kerdei.uni.gameplay;
 
-import java.math.*;
-
-import hu.kerdei.uni.Main;
 import hu.kerdei.uni.gameobject.*;
 
 import static java.lang.Math.abs;
 
 public class Gameplay {
 
-    public static Board board;
+    private static Gameplay instance = null;
+
+    private Board board;
     private Player player1;
     private Player player2;
+    private Player winnerPlayer;
 
-    public Gameplay(String player1Name, String player2Name, Board board) {
-        Gameplay.board = board;
-        player1 = new Player(player1Name, Color.BLUE, true);
+    private Gameplay() {
 
-        player2 = new Player(player2Name, Color.RED, false);
+        board = new Board();
+        player1 = new Player(Color.BLUE, true);
+        player2 = new Player(Color.RED, false);
     }
 
-    public Player getPlayer1() {
-        return player1;
+    static public Gameplay getInstance() {
+
+        if (instance == null) {
+            instance = new Gameplay();
+        }
+        return instance;
     }
 
-    public Player getPlayer2() {
-        return player2;
-    }
-
-    public void makeMove(Player player, Pos fromPos, Pos toPos) {
-        switchNextPlayer(player);
+    public void makeMove(Pos fromPos, Pos toPos) {
+        switchNextPlayer(getNextPlayer());
         board.switchFields(fromPos, toPos);
     }
-
-    private void endGame() {
-        //TODO
+    
+    public void resetGameplay() {
+        player1.setNext(true);
+        player2.setNext(false);
+        board = new Board();
     }
 
     private void switchNextPlayer(Player player) {
@@ -47,7 +49,9 @@ public class Gameplay {
         }
     }
 
-    public boolean canMakeMove(Player player, Pos fromPos, Pos toPos) {
+    public boolean canMakeMove(Pos fromPos, Pos toPos) {
+
+        Player player = getNextPlayer();
 
         Field fromField = board.getBoardFields().get(fromPos.row).get(fromPos.column);
         Field toField = board.getBoardFields().get(toPos.row).get(toPos.column);
@@ -58,10 +62,44 @@ public class Gameplay {
         return player.isNext() &&
                 !fromField.isEmpty() &&
                 fromField.getColor().getValue() == player.getColor().getValue() &&
-                toField.isEmpty()&&
-                rowAbs <= 1 &&
-                columnAbs <= 1;
+                toField.isEmpty() &&
+                ((rowAbs <= 1 && columnAbs == 0) || rowAbs == 0 && columnAbs <= 1);
+    }
+
+    public Player getNextPlayer() {
+        return player1.isNext() ? player1 : player2;
+    }
+
+    public void endGame() {
+        winnerPlayer = player1.isNext() ? player2 : player1;
     }
 
 
+    public boolean isGameOver() {
+        return board.isFinalState();
+    }
+
+    public Player getWinnerPlayer() {
+        return winnerPlayer;
+    }
+
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
+    }
+
+    public void setPlayer1Name(String player1Name) {
+        player1.setName(player1Name);
+    }
+
+    public void setPlayer2Name(String player2Name) {
+        player2.setName(player2Name);
+    }
+
+    public Board getBoard() {
+        return board;
+    }
 }
