@@ -112,6 +112,23 @@ public class Board {
         return true;
     }
 
+    public String boardfieldsInString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 4; j++) {
+
+                if (!boardFields.get(i).get(j).isEmpty()) {
+                    String toAppend = boardFields.get(i).get(j).getColor().getValue() == 0 ? "1" : "2";
+                    stringBuilder.append(toAppend);
+                } else {
+                    stringBuilder.append("0");
+                }
+
+            }
+        }
+        return stringBuilder.toString();
+    }
+
     @Override
     public String toString() {
 

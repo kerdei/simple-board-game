@@ -63,4 +63,8 @@ public class PrintClass {
     public static void wrongMove() {
         System.out.println("This move is not allowed");
     }
+
+    public static void askIPAddress() {
+        System.out.println("Please give the ip address of the nodeMCU");
+    }
 }
