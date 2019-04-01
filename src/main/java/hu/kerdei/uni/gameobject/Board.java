@@ -3,11 +3,12 @@ package hu.kerdei.uni.gameobject;
 import hu.kerdei.uni.Main;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class Board {
 
-    ArrayList<ArrayList<Field>> boardFields;
+    private ArrayList<ArrayList<Field>> boardFields;
 
     public Board() {
         boardFields = new ArrayList<>();
@@ -73,27 +74,28 @@ public class Board {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Board board = (Board) o;
+    public boolean equals(Object board) {
+        if (this == board) return true;
+        if (!(board instanceof Board)) return false;
 
-        ArrayList<ArrayList<Field>> boardFieldsO = board.getBoardFields();
-        if (boardFieldsO.size() != boardFields.size()) return false;
-        else {
-            for (int i = 0; i < boardFields.size(); i++) {
+        ArrayList<ArrayList<Field>> boardFields = ((Board) board).getBoardFields();
 
-                ArrayList<Field> boardFieldsRowThis = boardFields.get(i);
-                ArrayList<Field> boardFieldsRowO = boardFieldsO.get(i);
+        if (boardFields.size() != this.boardFields.size()) {
+            return false;
+        } else {
+            for (int i = 0; i < this.boardFields.size(); i++) {
 
-                for (int j = 0; j < boardFieldsRowThis.size(); j++) {
+                ArrayList<Field> boardRowThis = this.boardFields.get(i);
+                ArrayList<Field> boardRow = boardFields.get(i);
+
+                for (int j = 0; j < boardRowThis.size(); j++) {
 
                     /*
                     If one of them empty but the other is not returns false
                      */
 
-                    if (boardFieldsRowThis.get(j).isEmpty() && !boardFieldsRowO.get(j).isEmpty()
-                            || !boardFieldsRowThis.get(j).isEmpty() && boardFieldsRowO.get(j).isEmpty()) {
+                    if (boardRowThis.get(j).isEmpty() && !boardRow.get(j).isEmpty()
+                            || !boardRowThis.get(j).isEmpty() && boardRow.get(j).isEmpty()) {
                         return false;
                     }
 
@@ -101,15 +103,19 @@ public class Board {
                     If fields are not empty but the colors doesn't match returns false
                      */
 
-                    if (!boardFieldsRowThis.get(j).isEmpty() && !boardFieldsRowO.get(j).isEmpty() && (
-                            boardFieldsRowThis.get(j).getColor().getValue() != boardFieldsRowO.get(j).getColor().getValue())) {
+                    if (!boardRowThis.get(j).isEmpty() && !boardRow.get(j).isEmpty() && (
+                            boardRowThis.get(j).getColor().getValue() != boardRow.get(j).getColor().getValue())) {
                         return false;
                     }
                 }
             }
-
         }
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(boardFields);
     }
 
     public String boardfieldsInString() {
@@ -190,16 +196,16 @@ public class Board {
             for (int j = 1; j < boardField.size() - 1; j++) {
                 if (
                         !boardField.get(j - 1).isEmpty() &&
-                        !boardField.get(j).isEmpty() &&
-                        !boardField.get(j + 1).isEmpty()
-                        &&
+                                !boardField.get(j).isEmpty() &&
+                                !boardField.get(j + 1).isEmpty()
+                                &&
 
-                        boardField.get(j - 1).getColor().getValue() ==
-                        boardField.get(j).getColor().getValue() &&
-                        boardField.get(j + 1).getColor().getValue() ==
-                        boardField.get(j).getColor().getValue() &&
-                        boardField.get(j + 1).getColor().getValue() ==
-                        boardField.get(j - 1).getColor().getValue()) {
+                                boardField.get(j - 1).getColor().getValue() ==
+                                        boardField.get(j).getColor().getValue() &&
+                                boardField.get(j + 1).getColor().getValue() ==
+                                        boardField.get(j).getColor().getValue() &&
+                                boardField.get(j + 1).getColor().getValue() ==
+                                        boardField.get(j - 1).getColor().getValue()) {
                     Main.LOG.debug("Horizontal check true at ", boardField.get(j));
                     return true;
                 }
@@ -213,15 +219,15 @@ public class Board {
 
                 if (
                         !boardFields.get(i - 1).get(j).isEmpty() &&
-                        !boardFields.get(i).get(j).isEmpty() &&
-                        !boardFields.get(i + 1).get(j).isEmpty() &&
+                                !boardFields.get(i).get(j).isEmpty() &&
+                                !boardFields.get(i + 1).get(j).isEmpty() &&
 
-                        boardFields.get(i - 1).get(j).getColor() ==
-                        boardFields.get(i).get(j).getColor() &&
-                        boardFields.get(i + 1).get(j).getColor() ==
-                        boardFields.get(i).get(j).getColor() &&
-                        boardFields.get(i + 1).get(j).getColor() ==
-                        boardFields.get(i - 1).get(j).getColor()
+                                boardFields.get(i - 1).get(j).getColor() ==
+                                        boardFields.get(i).get(j).getColor() &&
+                                boardFields.get(i + 1).get(j).getColor() ==
+                                        boardFields.get(i).get(j).getColor() &&
+                                boardFields.get(i + 1).get(j).getColor() ==
+                                        boardFields.get(i - 1).get(j).getColor()
                 ) {
                     Main.LOG.debug("Vertical check true at ", boardFields.get(i).get(j));
                     return true;
@@ -240,27 +246,27 @@ public class Board {
             for (int j = 1; j < boardFields.get(i).size() - 1; j++) {
                 if (
                         (!boardFields.get(i - 1).get(j - 1).isEmpty() &&
-                         !boardFields.get(i).get(j).isEmpty() &&
-                         !boardFields.get(i - 1).get(j - 1).isEmpty() &&
+                                !boardFields.get(i).get(j).isEmpty() &&
+                                !boardFields.get(i - 1).get(j - 1).isEmpty() &&
 
-                          boardFields.get(i - 1).get(j - 1).getColor() ==
-                          boardFields.get(i).get(j).getColor() &&
-                          boardFields.get(i + 1).get(j + 1).getColor() ==
-                          boardFields.get(i).get(j).getColor() &&
-                          boardFields.get(i + 1).get(j + 1).getColor() ==
-                          boardFields.get(i - 1).get(j - 1).getColor())
+                                boardFields.get(i - 1).get(j - 1).getColor() ==
+                                        boardFields.get(i).get(j).getColor() &&
+                                boardFields.get(i + 1).get(j + 1).getColor() ==
+                                        boardFields.get(i).get(j).getColor() &&
+                                boardFields.get(i + 1).get(j + 1).getColor() ==
+                                        boardFields.get(i - 1).get(j - 1).getColor())
                                 ||
-                        (!boardFields.get(i - 1).get(j + 1).isEmpty() &&
-                         !boardFields.get(i).get(j).isEmpty() &&
-                         !boardFields.get(i + 1).get(j - 1).isEmpty() &&
-                          boardFields.get(i - 1).get(j + 1).getColor() ==
-                          boardFields.get(i).get(j).getColor() &&
-                          boardFields.get(i + 1).get(j - 1).getColor() ==
-                          boardFields.get(i).get(j).getColor() &&
-                          boardFields.get(i - 1).get(j + 1).getColor() ==
-                          boardFields.get(i + 1).get(j - 1).getColor())) {
-                          Main.LOG.debug("Cross check true at ", boardFields.get(i).get(j));
-                          return true;
+                                (!boardFields.get(i - 1).get(j + 1).isEmpty() &&
+                                        !boardFields.get(i).get(j).isEmpty() &&
+                                        !boardFields.get(i + 1).get(j - 1).isEmpty() &&
+                                        boardFields.get(i - 1).get(j + 1).getColor() ==
+                                                boardFields.get(i).get(j).getColor() &&
+                                        boardFields.get(i + 1).get(j - 1).getColor() ==
+                                                boardFields.get(i).get(j).getColor() &&
+                                        boardFields.get(i - 1).get(j + 1).getColor() ==
+                                                boardFields.get(i + 1).get(j - 1).getColor())) {
+                    Main.LOG.debug("Cross check true at ", boardFields.get(i).get(j));
+                    return true;
                 }
             }
         }

@@ -6,7 +6,7 @@ import static java.lang.Math.abs;
 
 public class Gameplay {
 
-    private static Gameplay instance = null;
+    private static final Gameplay instance = new Gameplay();
 
     private Board board;
     private Player player1;
@@ -14,17 +14,12 @@ public class Gameplay {
     private Player winnerPlayer;
 
     private Gameplay() {
-
         board = new Board();
         player1 = new Player(Color.BLUE, true);
         player2 = new Player(Color.RED, false);
     }
 
     static public Gameplay getInstance() {
-
-        if (instance == null) {
-            instance = new Gameplay();
-        }
         return instance;
     }
 
@@ -32,7 +27,7 @@ public class Gameplay {
         switchNextPlayer(getNextPlayer());
         board.switchFields(fromPos, toPos);
     }
-    
+
     public void resetGameplay() {
         player1.setNext(true);
         player2.setNext(false);

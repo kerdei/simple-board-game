@@ -17,19 +17,30 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            PrintClass.askIPAddress();
-            Scanner scanner = new Scanner(System.in);
 
-            GameNetwork gameNetwork = new GameNetwork(scanner.next());
+            Scanner scanner;
+
+            GameNetwork gameNetwork = null;
+            if (args.length > 0 && args[0].equalsIgnoreCase("-A")) {
+                PrintClass.askIPAddress();
+                scanner = new Scanner(System.in);
+                gameNetwork = new GameNetwork(scanner.next());
+            }
 
             PrintClass.startMessage();
             PrintClass.askPlayer1Name();
             scanner = new Scanner(System.in);
-            Gameplay.getInstance().setPlayer1Name(scanner.next());
+            Gameplay gameplay = Gameplay.getInstance();
+
+            gameplay.setPlayer1Name(scanner.nextLine());
 
             PrintClass.askPlayer2Name();
             scanner = new Scanner(System.in);
-            Gameplay.getInstance().setPlayer2Name(scanner.next());
+
+
+
+
+            gameplay.setPlayer2Name(scanner.nextLine());
 
             PrintClass.infoAboutStart();
             PrintClass.pressAnyKey();
@@ -37,29 +48,32 @@ public class Main {
             //Enter to continue
             System.in.read();
 
-            Board board = Gameplay.getInstance().getBoard();
-            while (!Gameplay.getInstance().isGameOver()) {
+            Board board = gameplay.getBoard();
+            while (!gameplay.isGameOver()) {
                 PrintClass.printBoard(board.toString());
-                gameNetwork.communicateBoardWithMcu(board.boardfieldsInString());
-                PrintClass.nextPlayerShouldMakeMove(Gameplay.getInstance().getNextPlayer());
+                if (gameNetwork != null) {
+                    gameNetwork.communicateBoardWithMcu(board.boardfieldsInString());
+                }
+                PrintClass.nextPlayerShouldMakeMove(gameplay.getNextPlayer());
                 scanner = new Scanner(System.in);
                 Pos from = new Pos(scanner.nextInt(), scanner.nextInt());
                 Pos to = new Pos(scanner.nextInt(), scanner.nextInt());
 
 
-                if (Gameplay.getInstance().canMakeMove(from, to)) {
-                    Gameplay.getInstance().makeMove(from, to);
+                if (gameplay.canMakeMove(from, to)) {
+                    gameplay.makeMove(from, to);
                     PrintClass.madeMove(from, to);
                 } else {
                     PrintClass.wrongMove();
                 }
             }
 
-            Gameplay.getInstance().endGame();
-
+            gameplay.endGame();
             PrintClass.printBoard(board.toString());
-            gameNetwork.communicateBoardWithMcu(board.boardfieldsInString());
-            PrintClass.endMessage(Gameplay.getInstance().getWinnerPlayer().getName());
+            if (gameNetwork != null) {
+                gameNetwork.communicateBoardWithMcu(board.boardfieldsInString());
+            }
+            PrintClass.endMessage(gameplay.getWinnerPlayer().getName());
             PrintClass.pressAnyKey();
 
             //Enter to continue

@@ -39,7 +39,7 @@ public class PrintClass {
         System.out.println();
         System.out.println();
         System.out.println("The game about to start, here is some info:");
-        System.out.println("You can move your fields if you give the ''from'' positions and the ''to'' positions");
+        System.out.println("You can move your fields if you give the \"from\" positions and the \"to\" positions");
         System.out.println("For example input : 0 0 1 0 , will result the (0,0) BLUE field will move to the (0,1) empty field");
         System.out.println();
     }
