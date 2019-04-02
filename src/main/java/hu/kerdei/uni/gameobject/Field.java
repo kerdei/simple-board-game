@@ -1,5 +1,7 @@
 package hu.kerdei.uni.gameobject;
 
+import java.util.Objects;
+
 public class Field {
 
     private Boolean isEmpty;
@@ -30,5 +32,23 @@ public class Field {
                 ", color=" + color +
                 ", obj=" + super.toString() +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Field field = (Field) o;
+        return isEmpty.equals(field.isEmpty) &&
+                color == field.color;
+    }
+
+    @Override
+    public int hashCode() {
+        int h = 0;
+        final int prime = 31;
+        h = prime * h + (isEmpty ? 1 : 2);
+        h = prime * h + (color == Color.RED ? 3 : 4);
+        return h;
     }
 }

@@ -115,7 +115,15 @@ public class Board {
 
     @Override
     public int hashCode() {
-        return Objects.hash(boardFields);
+        int h = 0;
+        final int prime = 31;
+
+        for (ArrayList<Field> boardField : boardFields) {
+            for (Field field : boardField) {
+                h += prime * field.hashCode();
+            }
+        }
+        return h;
     }
 
     public String boardfieldsInString() {
