@@ -16,7 +16,7 @@ public class GameObjectsTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(GameObjectsTest.class);
 
-    public GameObjectsTest(){
+    public GameObjectsTest() {
         LOG.debug("GameObjectsTest start");
     }
 
@@ -79,84 +79,82 @@ public class GameObjectsTest {
     }
 
     @Test
-    public void switchingFieldsTest() {
-        LOG.debug("Start of switchingFieldsTest");
-
+    public void emptyFieldSwitchTest() {
+        LOG.debug("Start of emptyFieldSwitchTest");
         Board board = new Board();
-
-        /*
-        #1 Switching two empty fields
-         */
 
         Pos fromPos = new Pos(3, 2);
         Pos toPos = new Pos(3, 3);
 
-        Field pastStateOfTheEmptyField1 = board.getBoardFields().get(fromPos.row).get(fromPos.column);
-        Field pastStateOfTheEmptyField2 = board.getBoardFields().get(toPos.row).get(toPos.column);
+        Field fromField = board.getBoardField(fromPos);
+        Field toField = board.getBoardField(toPos);
 
-        assertNotEquals(pastStateOfTheEmptyField1, pastStateOfTheEmptyField2);
+        assertTrue(fromField.isEmpty());
+        assertTrue(toField.isEmpty());
 
-        board.switchFields(fromPos, toPos);
-
-        Field newStateOfTheEmptyField1 = board.getBoardFields().get(toPos.row).get(toPos.column);
-        Field newStateOfTheEmptyField2 = board.getBoardFields().get(fromPos.row).get(fromPos.column);
-
-        LOG.debug("Each of the empty field objects should equal to the pastSelf");
-        LOG.debug(pastStateOfTheEmptyField1.toString());
-        LOG.debug(pastStateOfTheEmptyField2.toString());
-        assertEquals(pastStateOfTheEmptyField1, newStateOfTheEmptyField1);
-        assertEquals(pastStateOfTheEmptyField2, newStateOfTheEmptyField2);
-
-        /*
-        #2 Switching an empty field, with a non empty one should give back the same objects on the switched fields.
-         */
-
-        fromPos = new Pos(0, 0);
-        toPos = new Pos(1, 0);
-
-        Field pastStateOfNonEmptyField = board.getBoardFields().get(fromPos.row).get(fromPos.column);
-        Field pastStateOfTheEmptyField = board.getBoardFields().get(toPos.row).get(toPos.column);
-
-        assertNotEquals(pastStateOfNonEmptyField, pastStateOfTheEmptyField);
+        assertNull(fromField.getColor());
+        assertNull(toField.getColor());
 
         board.switchFields(fromPos, toPos);
 
-        Field newStateOftheNonEmptyField = board.getBoardFields().get(toPos.row).get(toPos.column);
-        Field newStateOfTheEmptyField = board.getBoardFields().get(fromPos.row).get(fromPos.column);
+        assertTrue(fromField.isEmpty());
+        assertTrue(toField.isEmpty());
 
-        LOG.debug("The Non empty field objects should be eq.");
-        LOG.debug(pastStateOfNonEmptyField.toString());
-        assertEquals(pastStateOfNonEmptyField, newStateOftheNonEmptyField);
+        assertNull(fromField.getColor());
+        assertNull(toField.getColor());
 
-        LOG.debug("The empty fields should be eq as well");
-        LOG.debug(pastStateOfTheEmptyField.toString());
-        assertEquals(pastStateOfTheEmptyField, newStateOfTheEmptyField);
+        assertEquals(fromField, board.getBoardField(toPos));
+        assertEquals(toField, board.getBoardField(fromPos));
+    }
 
+    @Test
+    public void switchingEmptyWithNonemptyField() {
+        LOG.debug("Start of switchingEmptyWithNonemptyField");
 
-        /*
-        #3 Switching two non empty fields.
-         */
+        Board board = new Board();
 
-        fromPos = new Pos(0, 3);
-        toPos = new Pos(0, 1);
+        Pos fromPos = new Pos(0, 0);
+        Pos toPos = new Pos(1, 0);
 
-        Field pastStateOfNonEmptyField1 = board.getBoardFields().get(fromPos.row).get(fromPos.column);
-        Field pastStateOfNonEmptyField2 = board.getBoardFields().get(toPos.row).get(toPos.column);
+        Field emptyField = board.getBoardField(toPos);
+        Field blueField = board.getBoardField(fromPos);
 
+        assertTrue(emptyField.isEmpty());
+        assertFalse(blueField.isEmpty());
+        assertEquals(blueField.getColor(), Color.BLUE);
 
-        assertNotEquals(pastStateOfNonEmptyField1, pastStateOfNonEmptyField2);
+        assertNotEquals(emptyField, blueField);
 
         board.switchFields(fromPos, toPos);
 
-        Field newStateOftheNonEmptyField1 = board.getBoardFields().get(toPos.row).get(toPos.column);
-        Field newStateOftheNonEmptyField2 = board.getBoardFields().get(fromPos.row).get(fromPos.column);
+        assertEquals(emptyField, board.getBoardField(fromPos));
+        assertEquals(blueField, board.getBoardField(toPos));
 
-        LOG.debug("Both non empty field's object should be the same with the past self");
-        LOG.debug(pastStateOfNonEmptyField1.toString());
-        LOG.debug(pastStateOfNonEmptyField2.toString());
-        assertEquals(pastStateOfNonEmptyField1, newStateOftheNonEmptyField1);
-        assertEquals(pastStateOfNonEmptyField2, newStateOftheNonEmptyField2);
-        LOG.debug("End of switchingFieldsTest");
+    }
+
+    @Test
+    public void switchingTwoNonEmptyField() {
+        LOG.debug("Start of switchingTwoNonEmptyField");
+
+        Board board = new Board();
+
+        Pos bluePos = new Pos(0, 0);
+        Pos redPos = new Pos(0, 1);
+
+        Field blueField = board.getBoardField(bluePos);
+        Field redField = board.getBoardField(redPos);
+
+        assertFalse(redField.isEmpty());
+        assertEquals(redField.getColor(), Color.RED);
+
+        assertFalse(blueField.isEmpty());
+        assertEquals(blueField.getColor(), Color.BLUE);
+
+        //The Red and the Blue field switched positions
+        board.switchFields(bluePos,redPos);
+
+        assertEquals(blueField,board.getBoardField(redPos));
+        assertEquals(redField,board.getBoardField(bluePos));
     }
 
     @Test

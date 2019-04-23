@@ -59,6 +59,10 @@ public class Board {
         return boardFields;
     }
 
+    public Field getBoardField(Pos pos) {
+        return boardFields.get(pos.row).get(pos.column);
+    }
+
     public void switchFields(Pos fromPos, Pos toPos) {
 
 

@@ -18,7 +18,6 @@ public class GameNetwork {
     private InetAddress address;
     private int messageID;
 
-
     public GameNetwork(String IPAddress) throws IOException {
         Main.LOG.debug("Gamenetwork constructor");
         address = InetAddress.getByName(IPAddress);
@@ -27,7 +26,7 @@ public class GameNetwork {
     }
 
     public void communicateBoardWithMcu(String mcuString) throws IOException {
-        Main.LOG.debug("communicateBoardWithMcu");
+        Main.LOG.debug("communicateBoardWihMcu");
         sendBoardToMCU(mcuString);
         for (int actualID = -1; actualID != messageID; ) {
             sendBoardToMCU(mcuString);
@@ -38,6 +37,7 @@ public class GameNetwork {
         Main.LOG.debug("communication done.");
         messageID++;
     }
+
 
     private void sendBoardToMCU(String mcuString) throws IOException {
         Main.LOG.debug("sending board info to MCU");
