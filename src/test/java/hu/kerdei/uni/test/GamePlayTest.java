@@ -31,14 +31,14 @@ public class GamePlayTest {
         Gameplay gameplay = Gameplay.getInstance();
         gameplay.resetGameplay();
 
-        Field pastStateOfField = gameplay.getBoard().getBoardFields().get(fromPos.row).get(fromPos.column);
+        Field pastStateOfField = gameplay.getBoard().getBoardField(fromPos);
 
         assertEquals(Color.BLUE.getValue(), pastStateOfField.getColor().getValue());
         assertTrue(gameplay.canMakeMove(fromPos, toPos));
         if (gameplay.canMakeMove(fromPos, toPos)) {
             gameplay.makeMove(fromPos, toPos);
         }
-        Field newStateOfField = gameplay.getBoard().getBoardFields().get(toPos.row).get(fromPos.column);
+        Field newStateOfField = gameplay.getBoard().getBoardField(toPos);
         assertEquals(pastStateOfField, newStateOfField);
 
     }
@@ -57,9 +57,9 @@ public class GamePlayTest {
         Pos toPos = new Pos(3, 3);
 
         //Color.RED field
-        gameplay.getBoard().switchFields(beforeCheckPos,fromPos);
+        gameplay.getBoard().switchFields(beforeCheckPos, fromPos);
 
-        Field pastStateOfTheRedField = gameplay.getBoard().getBoardFields().get(fromPos.row).get(fromPos.column);
+        Field pastStateOfTheRedField = gameplay.getBoard().getBoardField(fromPos);
 
         assertEquals(Color.RED.getValue(), pastStateOfTheRedField.getColor().getValue());
 
@@ -71,7 +71,7 @@ public class GamePlayTest {
             gameplay.makeMove(fromPos, toPos);
         }
 
-        Field newStateOfTheRedField = gameplay.getBoard().getBoardFields().get(toPos.row).get(fromPos.column);
+        Field newStateOfTheRedField = gameplay.getBoard().getBoardField(toPos);
         assertEquals(pastStateOfTheRedField, newStateOfTheRedField);
     }
 
@@ -87,7 +87,7 @@ public class GamePlayTest {
         Gameplay gameplay = Gameplay.getInstance();
         gameplay.resetGameplay();
 
-        Field pastStateOfField = gameplay.getBoard().getBoardFields().get(fromPos.row).get(fromPos.column);
+        Field pastStateOfField = gameplay.getBoard().getBoardField(fromPos);
 
         assertEquals(Color.BLUE.getValue(), pastStateOfField.getColor().getValue());
         assertFalse(gameplay.canMakeMove(fromPos, toPos));
@@ -125,7 +125,7 @@ public class GamePlayTest {
         Gameplay gameplay = Gameplay.getInstance();
         gameplay.resetGameplay();
 
-        Field redField = gameplay.getBoard().getBoardFields().get(fromPos.row).get(fromPos.column);
+        Field redField = gameplay.getBoard().getBoardField(fromPos);
         assertNotEquals(gameplay.getPlayer1().getColor().getValue(), redField.getColor().getValue());
         assertFalse(gameplay.canMakeMove(fromPos, toPos));
     }
@@ -143,8 +143,8 @@ public class GamePlayTest {
         Gameplay gameplay = Gameplay.getInstance();
         gameplay.resetGameplay();
 
-        Field blueField = gameplay.getBoard().getBoardFields().get(fromPos.row).get(fromPos.column);
-        Field redField = gameplay.getBoard().getBoardFields().get(toPos.row).get(toPos.column);
+        Field blueField = gameplay.getBoard().getBoardField(fromPos);
+        Field redField = gameplay.getBoard().getBoardField(toPos);
 
         assertTrue(!blueField.isEmpty());
         assertTrue(!redField.isEmpty());
@@ -165,8 +165,8 @@ public class GamePlayTest {
         Gameplay gameplay = Gameplay.getInstance();
         gameplay.resetGameplay();
 
-        Field blueField = gameplay.getBoard().getBoardFields().get(fromPos.row).get(fromPos.column);
-        Field emptyField = gameplay.getBoard().getBoardFields().get(toPos.row).get(toPos.column);
+        Field blueField = gameplay.getBoard().getBoardField(fromPos);
+        Field emptyField = gameplay.getBoard().getBoardField(toPos);
 
         assertTrue(!blueField.isEmpty());
         assertTrue(emptyField.isEmpty());

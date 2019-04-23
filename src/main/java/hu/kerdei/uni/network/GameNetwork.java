@@ -14,7 +14,6 @@ public class GameNetwork {
 
     private DatagramSocket datagramSocket;
     private byte[] data;
-    private int dataLength = 255;
     private InetAddress address;
     private int messageID;
 
@@ -54,6 +53,7 @@ public class GameNetwork {
     private int waitForReplyID() throws IOException {
         Main.LOG.debug("Waiting for reply");
 
+        int dataLength = 255;
         data = new byte[dataLength];
         DatagramPacket packet = new DatagramPacket(data, dataLength);
         try {

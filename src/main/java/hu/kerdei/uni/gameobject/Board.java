@@ -64,16 +64,13 @@ public class Board {
     }
 
     public void switchFields(Pos fromPos, Pos toPos) {
-
-
-        Field field1 = boardFields.get(fromPos.row).get(fromPos.column);
-        Field field2 = boardFields.get(toPos.row).get(toPos.column);
-
+        Field field1 = getBoardField(fromPos);
+        Field field2 = getBoardField(toPos);
 
         boardFields.get(toPos.row).set(toPos.column, field1);
-        Main.LOG.debug(boardFields.get(toPos.row).get(toPos.column).toString());
+        Main.LOG.debug(getBoardField(toPos).toString());
         boardFields.get(fromPos.row).set(fromPos.column, field2);
-        Main.LOG.debug(boardFields.get(fromPos.row).get(fromPos.column).toString());
+        Main.LOG.debug(getBoardField(fromPos).toString());
 
     }
 
@@ -147,10 +144,9 @@ public class Board {
         return stringBuilder.toString();
     }
 
+    //TODO
     @Override
     public String toString() {
-
-
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("\n");
 
@@ -204,21 +200,24 @@ public class Board {
         // #1
         Main.LOG.debug("isFinalState start");
         Main.LOG.debug("Horizontal check");
-        for (ArrayList<Field> boardField : boardFields) {
-            for (int j = 1; j < boardField.size() - 1; j++) {
+        for (int i = 0; i < boardFields.size(); i++) {
+            for (int j = 1; j < boardFields.get(i).size() - 1; j++) {
                 if (
-                        !boardField.get(j - 1).isEmpty() &&
-                                !boardField.get(j).isEmpty() &&
-                                !boardField.get(j + 1).isEmpty()
-                                &&
+                        !boardFields.get(i).get(j -1).isEmpty() &&
+                        !boardFields.get(i).get(j).isEmpty() &&
+                        !boardFields.get(i).get(j + 1).isEmpty()
+                        &&
 
-                                boardField.get(j - 1).getColor().getValue() ==
-                                        boardField.get(j).getColor().getValue() &&
-                                boardField.get(j + 1).getColor().getValue() ==
-                                        boardField.get(j).getColor().getValue() &&
-                                boardField.get(j + 1).getColor().getValue() ==
-                                        boardField.get(j - 1).getColor().getValue()) {
-                    Main.LOG.debug("Horizontal check true at ", boardField.get(j));
+                        boardFields.get(i).get(j - 1).getColor().getValue() ==
+                        boardFields.get(i).get(j).getColor().getValue() &&
+
+                        boardFields.get(i).get(j + 1).getColor().getValue() ==
+                        boardFields.get(i).get(j).getColor().getValue() &&
+
+                        boardFields.get(i).get(j + 1).getColor().getValue() ==
+                        boardFields.get(i).get(j - 1).getColor().getValue())
+                {
+                    Main.LOG.debug("Horizontal check true at ", boardFields.get(i).get(j));
                     return true;
                 }
             }
@@ -229,20 +228,22 @@ public class Board {
         for (int i = 1; i < boardFields.size() - 1; i++) {
             for (int j = 0; j < boardFields.get(i).size(); j++) {
 
-                if (
-                        !boardFields.get(i - 1).get(j).isEmpty() &&
-                                !boardFields.get(i).get(j).isEmpty() &&
-                                !boardFields.get(i + 1).get(j).isEmpty() &&
+                if(
+                    !boardFields.get(i-1).get(j).isEmpty() &&
+                    !boardFields.get(i).get(j).isEmpty() &&
+                    !boardFields.get(i+1).get(j).isEmpty() &&
 
-                                boardFields.get(i - 1).get(j).getColor() ==
-                                        boardFields.get(i).get(j).getColor() &&
-                                boardFields.get(i + 1).get(j).getColor() ==
-                                        boardFields.get(i).get(j).getColor() &&
-                                boardFields.get(i + 1).get(j).getColor() ==
-                                        boardFields.get(i - 1).get(j).getColor()
-                ) {
+                    boardFields.get(i-1).get(j).getColor() ==
+                    boardFields.get(i).get(j).getColor() &&
+
+                    boardFields.get(i+1).get(j).getColor() ==
+                    boardFields.get(i).get(j).getColor() &&
+
+                    boardFields.get(i+1).get(j).getColor() ==
+                    boardFields.get(i-1).get(j).getColor()
+                ){
                     Main.LOG.debug("Vertical check true at ", boardFields.get(i).get(j));
-                    return true;
+                    return  true;
                 }
 
             }
@@ -254,32 +255,34 @@ public class Board {
         /#Crosschecks
          */
         Main.LOG.debug("Cross check");
-        for (int i = 1; i < boardFields.size() - 1; i++) {
-            for (int j = 1; j < boardFields.get(i).size() - 1; j++) {
+        for (int i = 1 ; i < boardFields.size()-1 ; i++){
+            for (int j = 1 ; j < boardFields.get(i).size()-1; j++){
                 if (
-                        (!boardFields.get(i - 1).get(j - 1).isEmpty() &&
-                                !boardFields.get(i).get(j).isEmpty() &&
-                                !boardFields.get(i - 1).get(j - 1).isEmpty() &&
+                   (!boardFields.get(i-1).get(j-1).isEmpty() &&
+                    !boardFields.get(i).get(j).isEmpty() &&
+                    !boardFields.get(i-1).get(j-1).isEmpty() &&
 
-                                boardFields.get(i - 1).get(j - 1).getColor() ==
-                                        boardFields.get(i).get(j).getColor() &&
-                                boardFields.get(i + 1).get(j + 1).getColor() ==
-                                        boardFields.get(i).get(j).getColor() &&
-                                boardFields.get(i + 1).get(j + 1).getColor() ==
-                                        boardFields.get(i - 1).get(j - 1).getColor())
-                                ||
-                                (!boardFields.get(i - 1).get(j + 1).isEmpty() &&
-                                        !boardFields.get(i).get(j).isEmpty() &&
-                                        !boardFields.get(i + 1).get(j - 1).isEmpty() &&
-                                        boardFields.get(i - 1).get(j + 1).getColor() ==
-                                                boardFields.get(i).get(j).getColor() &&
-                                        boardFields.get(i + 1).get(j - 1).getColor() ==
-                                                boardFields.get(i).get(j).getColor() &&
-                                        boardFields.get(i - 1).get(j + 1).getColor() ==
-                                                boardFields.get(i + 1).get(j - 1).getColor())) {
-                    Main.LOG.debug("Cross check true at ", boardFields.get(i).get(j));
+                    boardFields.get(i-1).get(j-1).getColor() ==
+                    boardFields.get(i).get(j).getColor() &&
+                    boardFields.get(i+1).get(j+1).getColor() ==
+                    boardFields.get(i).get(j).getColor() &&
+                    boardFields.get(i+1).get(j+1).getColor() ==
+                    boardFields.get(i-1).get(j-1).getColor())
+                    ||
+                   (!boardFields.get(i-1).get(j+1).isEmpty()&&
+                    !boardFields.get(i).get(j).isEmpty() &&
+                    !boardFields.get(i+1).get(j-1).isEmpty()&&
+                    boardFields.get(i-1).get(j+1).getColor() ==
+                    boardFields.get(i).get(j).getColor() &&
+                    boardFields.get(i+1).get(j-1).getColor() ==
+                    boardFields.get(i).get(j).getColor() &&
+                    boardFields.get(i-1).get(j+1).getColor() ==
+                    boardFields.get(i+1).get(j-1).getColor())){
+                     Main.LOG.debug("Cross check true at ", boardFields.get(i).get(j));
+
                     return true;
                 }
+
             }
         }
         //@formatter:on

@@ -48,8 +48,8 @@ public class Gameplay {
 
         Player player = getNextPlayer();
 
-        Field fromField = board.getBoardFields().get(fromPos.row).get(fromPos.column);
-        Field toField = board.getBoardFields().get(toPos.row).get(toPos.column);
+        Field fromField = board.getBoardField(fromPos);
+        Field toField = board.getBoardField(toPos);
 
         int rowAbs = abs(fromPos.row - toPos.row);
         int columnAbs = abs(fromPos.column - toPos.column);
